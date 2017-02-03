@@ -10,9 +10,24 @@ if [ -z "$(ls /CMR/config)" ];then
 	cp -ra /CMR/config.orig/* /CMR/config/
 fi
 
-if [ -z "$(ls /CMR/ci)" ];then
-	# Copying original ci folder. This is due mounting the ci folder to an empty directory with docker `-v` parameter. Fixing issue #2
-	cp -ra /CMR/ci.orig/* /CMR/ci/
+# cleanUp previously created symlinks
+find /CMR/ci/profiles -type l -delete
+if [ -d "/CMR/ci/environments" ]; then
+	find /CMR/ci/environments -type l -delete
+fi
+
+if [ "$(ls /CMR/custom/profiles)" ];then
+	# Create symlinks in /CMR/ci/profiles folder
+	ln -s /CMR/custom/profiles/* /CMR/ci/profiles
+	echo "$(ls -la /CMR/ci/profiles/)"
+fi
+
+if [ "$(ls /CMR/custom/environments)" ];then
+	# Create the folder /CMR/ci/environments as it is non-existing at this point
+	mkdir -p /CMR/ci/environments
+
+	# Create symlinks in /CMR/ci/environments folder
+	ln -s /CMR/custom/environments/* /CMR/ci/environments
 fi
 
 exec sh startup.sh

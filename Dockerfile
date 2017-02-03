@@ -14,11 +14,12 @@ RUN apk --no-cache add ca-certificates wget \
  && rm *.apk \
  && rm /inspectit-cmr.linux.x64.zip \
  && cp -ar /CMR/config /CMR/config.orig \
- && cp -ar /CMR/ci /CMR/ci.orig
+ && mkdir -p /CMR/custom/profiles \
+ && mkdir -p /CMR/custom/environments
 
 WORKDIR /CMR
 
-VOLUME ["/CMR/config", "/CMR/db", "/CMR/storage", "/CMR/ci"]
+VOLUME ["/CMR/config", "/CMR/db", "/CMR/storage", "/CMR/custom/profiles", "/CMR/custom/environments"]
 
 EXPOSE 8182 9070
 
